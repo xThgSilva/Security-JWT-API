@@ -1,6 +1,7 @@
 package com.expenses.security.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,6 +42,12 @@ public class ExpenseService {
 
     // Delete
     public void deleteExpense(Long id) {
+    	Optional<Expense> expenseExists = expenseRepository.findById(id);
+    	
+    	if(expenseExists.isEmpty()) {
+    		throw new RuntimeException("Expense not found!");
+    	}
+    	
     	expenseRepository.deleteById(id);
     }
 

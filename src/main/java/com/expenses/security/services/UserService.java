@@ -21,6 +21,10 @@ public class UserService {
     public User register(UserDTO dto) {
     	User user = new User();
     	
+    	if(userRepository.findByEmail(dto.getEmail()).isPresent()) {
+    		throw new RuntimeException("E-mail já cadastrado!");
+    	}
+    	
     	user.setEmail(dto.getEmail());
     	user.setName(dto.getName());
         user.setPassword(encoder.encode(dto.getPassword()));

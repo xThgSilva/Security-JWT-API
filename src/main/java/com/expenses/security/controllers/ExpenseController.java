@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.expenses.security.dto.ExpenseDTO;
 import com.expenses.security.entities.Expense;
+import com.expenses.security.repositories.ExpenseRepository;
 import com.expenses.security.services.ExpenseService;
 import com.expenses.security.services.JwtService;
 
@@ -60,7 +61,6 @@ public class ExpenseController {
 
     @DeleteMapping(value = "/delete/{id}")
     public void delete(@PathVariable Long id, HttpServletRequest request) {
-        Long userId = userToken(request);
         expenseService.deleteExpense(id);
     }
 }
