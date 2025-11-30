@@ -1,7 +1,6 @@
 package com.expenses.security.services;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,6 +8,8 @@ import org.springframework.stereotype.Service;
 import com.expenses.security.dto.ExpenseDTO;
 import com.expenses.security.entities.Expense;
 import com.expenses.security.entities.User;
+import com.expenses.security.exceptions.ExpenseNotFoundException;
+import com.expenses.security.exceptions.NotPermissionException;
 import com.expenses.security.repositories.ExpenseRepository;
 
 @Service
@@ -42,11 +43,8 @@ public class ExpenseService {
 
     // Delete
     public void deleteExpense(Long id) {
-    	Optional<Expense> expenseExists = expenseRepository.findById(id);
-    	
-    	if(expenseExists.isEmpty()) {
-    		throw new RuntimeException("Expense not found!");
-    	}
+    	Expense expense = expenseRepository.findById(id)
+                .orElseThrow(() -> new ExpenseNotFoundException("Expense with Id " + id + " not found"));
     	
     	expenseRepository.deleteById(id);
     }
@@ -54,10 +52,10 @@ public class ExpenseService {
     // Update
     public Expense updateExpense(Long id, Expense expenseUpdated, Long userId) {
     	Expense current = expenseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Expense not found."));
+                .orElseThrow(() -> new ExpenseNotFoundException("Expense not found."));
 
         if (!current.getUser().getId().equals(userId)) {
-            throw new RuntimeException("User not authorized to change this expense.");
+            throw new NotPermissionException("User not authorized to change this expense.");
         }
 
         current.setTitle(expenseUpdated.getTitle());

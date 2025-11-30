@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.expenses.security.dto.UserDTO;
 import com.expenses.security.entities.User;
+import com.expenses.security.exceptions.EmailAlreadyExists;
 import com.expenses.security.repositories.UserRepository;
 
 @Service
@@ -22,7 +23,7 @@ public class UserService {
     	User user = new User();
     	
     	if(userRepository.findByEmail(dto.getEmail()).isPresent()) {
-    		throw new RuntimeException("E-mail já cadastrado!");
+    		throw new EmailAlreadyExists("Email already registered.");
     	}
     	
     	user.setEmail(dto.getEmail());
