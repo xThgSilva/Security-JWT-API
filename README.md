@@ -1,69 +1,77 @@
 # Expenses Management API
 
-## Descrição
+## Description
 
-Essa API foi desenvolvida com Spring Boot, com o objetivo de gerenciar despesas de um usuário, utilizando das operações CRUD. A API pode **criar**, **ler/listar**, **deletar** e **atualizar** despesas e pode **criar** e **autenticar** usuários. Para a segurança, a API utiliza autenticação baseada em **JWT (JSON Web Token)** e **Spring Security**.
+This API was developed with Spring Boot, with the goal of managing a user's expenses using CRUD operations. The API can **create**, **read/list**, **delete**, and **update** expenses, and can **create** and **authenticate** users. For security, the API uses authentication based on **JWT (JSON Web Token)** and **Spring Security**.
 
-## Tecnologias Utilizadas
+## Technologies Used
 
-- Java
-- Spring Boot
-- Spring Security
-- Spring Data JPA
-- MySQL
-- JWT (JSON Web Token)
-- BCrypt (criptografia de senhas)
-- Maven
+* Java
+* Spring Boot
+* Spring Security
+* Spring Data JPA
+* MySQL
+* JWT (JSON Web Token)
+* BCrypt (password encryption)
+* Maven
 
-## Segurança e Autenticação
+## Security and Authentication
 
-### Tecnologias de Segurança
+### Security Technologies
 
-- **Spring Security** - Framework de segurança e autenticação
-- **JWT (JSON Web Token)** - Tokens stateless para autenticação
-- **BCrypt** - Algoritmo de hash para criptografia de senhas
-- **JJWT** - Biblioteca Java para geração e validação de tokens
+* **Spring Security** - Security and Authentication Framework
+* **JWT (JSON Web Token)** - Stateless tokens for authentication
+* **BCrypt** - Hash algorithm for password encryption
+* **JJWT** - Java library for generating and validating tokens
 
-### Como Enviar o Token
+### How to send the token
 
-Após fazer login, o token JWT é armazenado automaticamente em um cookie HTTP. Para requisições via ferramentas como Postman ou Insomnia, você pode enviar o token de duas formas:
+After logging in, the JWT token is automatically stored in an HTTP cookie. For requests via tools such as Postman or Insomnia, you can send the token in two ways:
 
-**Opção 1: Cookie (automático no navegador)**
+**Option 1: Cookie (automatic in the browser)**
+
 ```
-Cookie: jwt=token_aqui
+Cookie: jwt=your_token_here
 ```
 
-**Opção 2: Header Authorization**
+**Option 2: Authorization Header**
+
 ```
-Authorization: Bearer token_aqui
+Authorization: Bearer your_token_here
 ```
 
 ## Endpoints
 
-## Autenticação (`/auth`)
+## Authentication (`/auth`)
 
-**⚠️ Rotas Públicas** - Não requerem autenticação
+**⚠️ Public Routes** - Do not require authentication
 
 ### 1. POST `/auth/register`
-Registra um novo usuário no sistema.
 
-**Requisição**
-- **URL:** `/auth/register`
-- **Método:** POST
-- **Cabeçalho:**
-  - Content-Type: application/json
-- **Corpo:**
+Registers a new user in the system.
+
+**Request**
+
+* **URL:** `/auth/register`
+* **Method:** POST
+* **Header:**
+
+  * Content-Type: application/json
+* **Body:**
+
 ```json
 {
     "name": "João Silva",
     "email": "joao@email.com",
-    "password": "senha123"
+    "password": "password123"
 }
 ```
 
-**Resposta**
-- **Código de Status:** 200 OK
-- **Corpo:**
+**Response**
+
+* **Status Code:** 200 OK
+* **Body:**
+
 ```json
 {
     "id": 1,
@@ -73,9 +81,11 @@ Registra um novo usuário no sistema.
 }
 ```
 
-**Erro - Email já Cadastrado**
-- **Código de Status:** 409 Conflict
-- **Corpo:**
+**Error - Email Already Registered**
+
+* **Status Code:** 409 Conflict
+* **Body:**
+
 ```json
 {
     "timestamp": "2025-01-04T10:30:00",
@@ -88,64 +98,76 @@ Registra um novo usuário no sistema.
 ---
 
 ### 2. POST `/auth/login`
-Autentica um usuário e retorna um token JWT.
 
-**Requisição**
-- **URL:** `/auth/login`
-- **Método:** POST
-- **Cabeçalho:**
-  - Content-Type: application/json
-- **Corpo:**
+Authenticates a user and returns a JWT token.
+
+**Request**
+
+* **URL:** `/auth/login`
+* **Method:** POST
+* **Header:**
+
+  * Content-Type: application/json
+* **Body:**
+
 ```json
 {
     "email": "joao@email.com",
-    "password": "senha123"
+    "password": "password123"
 }
 ```
 
-**Resposta**
-- **Código de Status:** 200 OK
-- **Cookie:** `jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (HttpOnly, válido por 1 hora)
-- **Corpo:**
+**Response**
+
+* **Status Code:** 200 OK
+* **Cookie:** `jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...` (HttpOnly, valid for 1 hour)
+* **Body:**
+
 ```
-Login realizado com sucesso!
+Login successful!
 ```
 
-**Erro - Credenciais Inválidas**
-- **Código de Status:** 401 Unauthorized
-- **Corpo:**
+**Error - Invalid Credentials**
+
+* **Status Code:** 401 Unauthorized
+* **Body:**
+
 ```json
 {
     "timestamp": "2025-01-04T10:30:00",
     "status": 401,
     "error": "Unauthorized.",
-    "message": "Invalid Credentials."
+    "message": "Invalid credentials."
 }
 ```
 
 ---
 
-## Despesas (`/expense`)
+## Expenses (`/expense`)
 
-### **Todas as rotas abaixo requerem autenticação**
+### **All routes below require authentication**
 
 ### 1. GET `/expense/list`
-Lista todas as despesas do usuário autenticado.
 
-**Requisição**
-- **URL:** `/expense/list`
-- **Método:** GET
-- **Autenticação:** Cookie JWT ou Header Authorization
+Lists all expenses of the authenticated user.
 
-**Resposta**
-- **Código de Status:** 200 OK
-- **Corpo:**
+**Request**
+
+* **URL:** `/expense/list`
+* **Method:** GET
+* **Authentication:** JWT Cookie or Authorization Header
+
+**Response**
+
+* **Status Code:** 200 OK
+* **Body:**
+
 ```json
 [
     {
         "id": 1,
-        "title": "Supermercado",
-        "description": "Compras do mês",
+        "title": "Supermarket",
+        "description": "Monthly groceries",
         "amount": 450.50,
         "user": {
             "id": 1,
@@ -156,8 +178,8 @@ Lista todas as despesas do usuário autenticado.
     },
     {
         "id": 2,
-        "title": "Academia",
-        "description": "Mensalidade",
+        "title": "Gym",
+        "description": "Monthly fee",
         "amount": 120.00,
         "user": {
             "id": 1,
@@ -172,71 +194,84 @@ Lista todas as despesas do usuário autenticado.
 ---
 
 ### 2. POST `/expense/register`
-Cria uma nova despesa para o usuário autenticado.
 
-**Requisição**
-- **URL:** `/expense/register`
-- **Método:** POST
-- **Autenticação:** Cookie JWT ou Header Authorization
-- **Cabeçalho:**
-  - Content-Type: application/json
-- **Corpo:**
+Creates a new expense for the authenticated user.
+
+**Request**
+
+* **URL:** `/expense/register`
+* **Method:** POST
+* **Authentication:** JWT Cookie or Authorization Header
+* **Header:**
+
+  * Content-Type: application/json
+* **Body:**
+
 ```json
 {
-    "title": "Aluguel",
-    "description": "Aluguel mensal do apartamento",
+    "title": "Rent",
+    "description": "Monthly apartment rent",
     "amount": 1500.00
 }
 ```
 
-**Resposta**
-- **Código de Status:** 200 OK
-- **Corpo:**
+**Response**
+
+* **Status Code:** 200 OK
+* **Body:**
+
 ```json
 {
     "id": 3,
-    "title": "Aluguel",
-    "description": "Aluguel mensal do apartamento",
+    "title": "Rent",
+    "description": "Monthly apartment rent",
     "amount": 1500.00,
     "user": {
         "id": 1,
         "name": "João Silva",
         "email": "joao@email.com",
         "password": "$2a$10$..."
-    }
+        }
 }
 ```
 
 ---
 
 ### 3. PUT `/expense/update/{id}`
-Atualiza uma despesa existente do usuário autenticado.
 
-**Requisição**
-- **URL:** `/expense/update/{id}`
-- **Método:** PUT
-- **Parâmetro de URL:**
-  - `id` - ID da despesa
-- **Autenticação:** Cookie JWT ou Header Authorization
-- **Cabeçalho:**
-  - Content-Type: application/json
-- **Corpo:**
+Updates an existing expense of the authenticated user.
+
+**Request**
+
+* **URL:** `/expense/update/{id}`
+* **Method:** PUT
+* **URL Parameter:**
+
+  * `id` - Expense ID
+* **Authentication:** JWT Cookie or Authorization Header
+* **Header:**
+
+  * Content-Type: application/json
+* **Body:**
+
 ```json
 {
-    "title": "Aluguel Atualizado",
-    "description": "Novo valor do aluguel",
+    "title": "Updated Rent",
+    "description": "New rent value",
     "amount": 1600.00
 }
 ```
 
-**Resposta**
-- **Código de Status:** 200 OK
-- **Corpo:**
+**Response**
+
+* **Status Code:** 200 OK
+* **Body:**
+
 ```json
 {
     "id": 3,
-    "title": "Aluguel Atualizado",
-    "description": "Novo valor do aluguel",
+    "title": "Updated Rent",
+    "description": "New rent value",
     "amount": 1600.00,
     "user": {
         "id": 1,
@@ -247,9 +282,11 @@ Atualiza uma despesa existente do usuário autenticado.
 }
 ```
 
-**Erro - Despesa Não Encontrada**
-- **Código de Status:** 404 Not Found
-- **Corpo:**
+**Error - Expense Not Found**
+
+* **Status Code:** 404 Not Found
+* **Body:**
+
 ```json
 {
     "timestamp": "2025-01-04T10:30:00",
@@ -259,36 +296,44 @@ Atualiza uma despesa existente do usuário autenticado.
 }
 ```
 
-**Erro - Sem Permissão**
-- **Código de Status:** 403 Forbidden
-- **Corpo:**
+**Error - No Permission**
+
+* **Status Code:** 403 Forbidden
+* **Body:**
+
 ```json
 {
     "timestamp": "2025-01-04T10:30:00",
     "status": 403,
     "error": "Forbidden.",
-    "message": "User not authorized to change this expense."
+    "message": "User not authorized to modify this expense."
 }
 ```
 
 ---
 
 ### 4. DELETE `/expense/delete/{id}`
-Deleta uma despesa do usuário autenticado.
 
-**Requisição**
-- **URL:** `/expense/delete/{id}`
-- **Método:** DELETE
-- **Parâmetro de URL:**
-  - `id` - ID da despesa
-- **Autenticação:** Cookie JWT ou Header Authorization
+Deletes an expense of the authenticated user.
 
-**Resposta**
-- **Código de Status:** 200 OK (sem corpo)
+**Request**
 
-**Erro - Despesa Não Encontrada**
-- **Código de Status:** 404 Not Found
-- **Corpo:**
+* **URL:** `/expense/delete/{id}`
+* **Method:** DELETE
+* **URL Parameter:**
+
+  * `id` - Expense ID
+* **Authentication:** JWT Cookie or Authorization Header
+
+**Response**
+
+* **Status Code:** 200 OK (no body)
+
+**Error - Expense Not Found**
+
+* **Status Code:** 404 Not Found
+* **Body:**
+
 ```json
 {
     "timestamp": "2025-01-04T10:30:00",
@@ -300,26 +345,29 @@ Deleta uma despesa do usuário autenticado.
 
 ---
 
-## Tratamento de Erros
+## Error Handling
 
-A API utiliza um sistema de tratamento global de exceções que retorna respostas padronizadas:
+The API uses a global exception handling system that returns standardized responses:
 
-### Estrutura de Erro
+### Error Structure
+
 ```json
 {
     "timestamp": "2025-01-04T10:30:00",
     "status": 404,
     "error": "Not Found.",
-    "message": "Mensagem descritiva do erro"
+    "message": "Descriptive error message"
 }
 ```
-## Observações Importantes
 
-1. **Autenticação Obrigatória:** Todas as rotas de despesas requerem um token JWT válido
-2. **Isolamento de Dados:** Cada usuário só tem acesso às suas próprias despesas
-3. **Validação de Permissões:** Ao tentar atualizar uma despesa, o sistema verifica se ela pertence ao usuário autenticado
-4. **Token JWT:** Válido por 1 hora após o login, depois é necessário fazer login novamente
-5. **Cookie Automático:** No navegador, o cookie JWT é enviado automaticamente em todas as requisições
+## Important Notes
 
-## Autor
-- [@Thiago](https://www.github.com/xThgSilva)
+1. **Required Authentication:** All expense routes require a valid JWT token
+2. **Data Isolation:** Each user only has access to their own expenses
+3. **Permission Validation:** When attempting to update an expense, the system verifies if it belongs to the authenticated user
+4. **JWT Token:** Valid for 1 hour after login; after that, it is necessary to log in again
+5. **Automatic Cookie:** In the browser, the JWT cookie is automatically sent with all requests
+
+## Author
+
+* [@Thiago](https://www.github.com/xThgSilva)
